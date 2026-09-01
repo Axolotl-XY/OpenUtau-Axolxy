@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using OpenUtau.Core.Render;
@@ -13,7 +12,6 @@ namespace OpenUtau.Core.Util {
 
     public static class Preferences {
         public static SerializablePreferences Default;
-        public static bool FirstRun { get; private set; }
 
         static Preferences() {
             Load();
@@ -45,17 +43,6 @@ namespace OpenUtau.Core.Util {
             } catch(Exception e){
                 Log.Error(e, "failed to load prefs-default.json");
             }
-            Save();
-        }
-
-        public static void ImportFrom(string prefsFilePath) {
-            var imported = JsonConvert.DeserializeObject<SerializablePreferences>(
-                File.ReadAllText(prefsFilePath, Encoding.UTF8));
-            if (imported == null) {
-                throw new InvalidDataException("Invalid preferences file.");
-            }
-            Default = imported;
-            FirstRun = false;
             Save();
         }
 
@@ -124,11 +111,6 @@ namespace OpenUtau.Core.Util {
 
                     if (!ValidString(new Action(() => CultureInfo.GetCultureInfo(Default.Language)))) Default.Language = string.Empty;
                     if (!ValidString(new Action(() => CultureInfo.GetCultureInfo(Default.SortingOrder)))) Default.SortingOrder = string.Empty;
-                    if (Default.Beta) {
-                        Default.Channel = "beta";
-                        Default.Beta = false;
-                    }
-                    if (!new[] { "stable", "beta", "alpha" }.Contains(Default.Channel)) Default.Channel = "stable";
                     if (!Renderers.getRendererOptions().Contains(Default.DefaultRenderer)) Default.DefaultRenderer = string.Empty;
                     if (!Onnx.getRunnerOptions().Contains(Default.OnnxRunner)) Default.OnnxRunner = string.Empty;
                     if (Default.Theme != null) {
@@ -138,24 +120,7 @@ namespace OpenUtau.Core.Util {
                         };
                         Default.Theme = null;
                     }
-                    if (Default.PreferPortAudio != null) {
-                        Default.AudioBackEnd = Default.PreferPortAudio switch {
-                            false => 0,
-                            true => 1
-                        };
-                        Default.PreferPortAudio = null;
-                    }
-                    Default.MigrateRealTimePitchMode();
-                    Default.RecentSingers = Default.RecentSingers?
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .ToList()
-                        ?? new List<string>();
-                    Default.FavoriteSingers = Default.FavoriteSingers?
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .ToList()
-                        ?? new List<string>();
                 } else {
-                    FirstRun = true;
                     Reset();
                 }
             } catch (Exception e) {
@@ -184,26 +149,14 @@ namespace OpenUtau.Core.Util {
             public int? PlaybackDeviceIndex;
             public bool ShowPrefs = true;
             public bool ShowTips = true;
-            public string ThemeName = "Rose";
-            public string UiFontPath = string.Empty;
-            public string UiFontFamily = string.Empty;
-            public bool UseUiFontForNotes = false;
-            public double ButtonCornerRadius = 0;
-            public double NoteCornerRadius = 2;
-            public double NoteOpacity = 1;
-            public double NoteHighlightThickness = 1;
-            public double UiCornerRadius = 0;
+            public string ThemeName = "Light";
             public int DegreeStyle;
             public bool UseTrackColor = false;
-            public bool UseTrackColorInPianoRoll = false;
-            public double TrackColorOpacity = 1;
-            public bool UseCustomSingerTheme = true;
             public bool ClearCacheOnQuit = false;
             public bool PreRender = true;
             public int NumRenderThreads = 2;
             public string DefaultRenderer = string.Empty;
             public int WorldlineR = 0;
-            public bool ExtendEndingPhonemes = false;
             public string OnnxRunner = string.Empty;
             public int OnnxGpu = 0;
             /// <summary>
@@ -218,29 +171,13 @@ namespace OpenUtau.Core.Util {
             public bool DiffSingerTensorCache = true;
             public bool DiffSingerVarianceLocalPitchPatch = false;
             public bool DiffSingerLangCodeHide = false;
-            public bool DiffSingerAutoSP = false;
-            public int DiffSingerAutoSPMs = 40;
             public bool DiffSingerLocalRetaking = false;
-            public bool DiffSingerShowRenderPhraseBoundaries = false;
-            public bool ShowWaveformPhraseBoundaries = false;
-            /// <summary>
-            /// Auto-merge nearby DiffSinger phrases (piano roll toggle). Off by
-            /// default: it changes how the model segments a passage and is still
-            /// being tuned.
-            /// </summary>
-            public bool DiffSingerMergeNearbyPhrases = false;
-            public bool Metronome = false;
             public bool SkipRenderingMutedTracks = false;
-            // Experimental Cross-Pitch Blend (XPB).
-            public bool ExperimentalCrossPitchBlend = false;
-            // 0 = final pitch curve, 1 = static note tone.
-            public int CrossPitchBlendMode = 0;
             public string Language = string.Empty;
             public string? SortingOrder = null;
             public List<string> RecentFiles = new List<string>();
             public string SkipUpdate = string.Empty;
             public string AdditionalSingerPath = string.Empty;
-            public string AdditionalResamplerPath = string.Empty;
             public bool InstallToAdditionalSingersPath = true;
             public bool LoadDeepFolderSinger = true;
             public bool PreferCommaSeparator = false;
@@ -249,63 +186,33 @@ namespace OpenUtau.Core.Util {
             public List<string> FavoriteSingers = new List<string>();
             public Dictionary<string, string> SingerPhonemizers = new Dictionary<string, string>();
             public List<string> RecentPhonemizers = new List<string>();
-            public uint AudioBackEnd = 0; // 0 = Automatic, 1 = MiniAudio, 2 = SDL
+            public bool PreferPortAudio = false;
             public bool UseSystemDefaultAudioDevice = true;
             public double PlayPosMarkerMargin = 0.9;
-            public int MetronomeVolume = 60;
-            public int MetronomeHighFrequency = 2200;
-            public int MetronomeLowFrequency = 1320;
             public int LockStartTime = 0;
             public int PlaybackAutoScroll = 2;
-            public double PlaybackVerticalFollowMargin = 1.5;
-            public double PlaybackVerticalFollowDamping = 3;
-            public double PlaybackVerticalFollowMaxStep = 1.5;
             public bool ReverseLogOrder = true;
             public bool ShowPortrait = true;
             public bool ShowIcon = true;
             public bool ShowGhostNotes = true;
-            public bool NoteHoverGlow = true;
-            public bool ShowPlaybackVerticalFollow = false;
-            public bool ShowPlaybackNoteHighlight = true;
-            public double PlaybackHighlightFadeInPerSecond = 8.0;
-            public double PlaybackHighlightFadeOutPerSecond = 6.2;
-            public bool ShowPlaybackNoteBounce = false;
-            public double PlaybackNoteBounceHeight = 12.0;
-            public double PlaybackNoteBounceDuration = 0.25;
-            public bool ShowPlaybackNoteOrbit = false;
-            public bool ShowPlaybackPortraitSpin = false;
-            public bool ShowRainbowEffect = false;
             public EditTool EditTool = new EditTool();
             public bool PlayTone = true;
-            /// <summary>Legacy; migrated to <see cref="RealTimePitchMode"/> on load.</summary>
-            public bool RealTimePitchGeneration = false;
-            public int RealTimePitchMode = (int)LivePitchMode.Off;
             public bool ShowVibrato = true;
             public bool ShowPitch = true;
             public bool ShowFinalPitch = true;
             public bool ShowWaveform = true;
             public bool ShowPhoneme = true;
-            public bool ShowPhonemePanel = false;
-            public bool DiffSingerBarStyle = false;
-            public bool PitchEditMode = false;
-            public double PitchEditDim = 59;
             public bool ShowExpressions = true;
             public bool ShowPhonemizerTags = true;
             public bool ShowNoteParams = true;
             public Dictionary<string, string> DefaultResamplers = new Dictionary<string, string>();
             public Dictionary<string, string> DefaultWavtools = new Dictionary<string, string>();
-            public string DefaultServerUrl = "http://localhost:8000";
-            public string DefaultEndpoint = "/synthesize";
             public string LyricHelper = string.Empty;
             public bool LyricsHelperBrackets = false;
             public int OtoEditor = 0;
             public string VLabelerPath = string.Empty;
             public string SetParamPath = string.Empty;
-            public bool Beta = false; // deprecated, migrated to Channel
-            /// <summary>
-            /// Release channel for the auto updater: "stable", "beta" or "alpha".
-            /// </summary>
-            public string Channel = "stable";
+            public bool Beta = false;
             public bool RememberMid = false;
             public bool RememberUst = true;
             public bool RememberVsqx = true;
@@ -366,18 +273,6 @@ errors.txt
             // Legacy
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public int? Theme;
-            public bool? PreferPortAudio = false;
-
-            public void MigrateRealTimePitchMode() {
-                if (RealTimePitchGeneration && RealTimePitchMode == (int)LivePitchMode.Off) {
-                    RealTimePitchMode = (int)LivePitchMode.Normal;
-                }
-                RealTimePitchGeneration = false;
-                if (RealTimePitchMode < (int)LivePitchMode.Off
-                    || RealTimePitchMode > (int)LivePitchMode.Fast) {
-                    RealTimePitchMode = (int)LivePitchMode.Off;
-                }
-            }
         }
 
         /// <summary>

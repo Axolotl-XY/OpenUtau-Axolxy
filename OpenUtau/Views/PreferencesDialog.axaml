@@ -3,9 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:OpenUtau.App.ViewModels"
-        xmlns:c="clr-namespace:OpenUtau.App.Controls"
-        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="460"
         x:Class="OpenUtau.App.Views.PreferencesDialog"
         Icon="/Assets/open-utau.ico"
@@ -84,12 +81,8 @@
             </ComboBox.ItemTemplate>
           </ComboBox>
           <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.channel}" HorizontalAlignment="Left"/>
-            <ComboBox SelectedIndex="{Binding Channel}" HorizontalAlignment="Right" Width="120">
-              <ComboBoxItem Content="{DynamicResource prefs.channel.stable}"/>
-              <ComboBoxItem Content="{DynamicResource prefs.channel.beta}"/>
-              <ComboBoxItem Content="{DynamicResource prefs.channel.alpha}"/>
-            </ComboBox>
+            <TextBlock Text="{DynamicResource prefs.advanced.beta}" HorizontalAlignment="Left"/>
+            <ToggleSwitch IsChecked="{Binding Beta}"/>
           </Grid>
           <TextBlock Classes="restart"/>
         </StackPanel>
@@ -105,10 +98,9 @@
           <ComboBox ItemsSource="{Binding AudioOutputDevices}" SelectedItem="{Binding AudioOutputDevice}" IsEnabled="{Binding !UseSystemDefaultDevice}"/>
           <Button Content="{DynamicResource prefs.playback.test}" HorizontalAlignment="Stretch" Command="{Binding TestAudioOutputDevice}"/>
           <TextBlock Text="{DynamicResource prefs.playback.backend}" Margin="0,10,0,0"/>
-          <ComboBox SelectedIndex="{Binding AudioBackEnd}">
+          <ComboBox SelectedIndex="{Binding PreferPortAudio}">
             <ComboBoxItem Content="{DynamicResource prefs.playback.backend.auto}"/>
             <ComboBoxItem Content="{DynamicResource prefs.playback.backend.mini}"/>
-            <ComboBoxItem Content="{DynamicResource prefs.playback.backend.sdl3}"/>
           </ComboBox>
           <TextBlock Classes="restart"/>
           <TextBlock Text="{DynamicResource prefs.playback.lockstarttime}" Margin="0,10,0,0"/>
@@ -123,68 +115,18 @@
             <ComboBoxItem Content="{DynamicResource prefs.playback.autoscrollmode.stationarycursor}"/>
             <ComboBoxItem Content="{DynamicResource prefs.playback.autoscrollmode.pagescroll}"/>
           </ComboBox>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.cursorposition}" Margin="0,10,0,0"
-                          Value="{Binding PlayPosMarkerMargin}" Default="0.9" Minimum="0" Maximum="1"
-                          TickFrequency="0.1" IsSnapToTickEnabled="True" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.notehighlight.fadein}" Margin="0,10,0,0"
-                          Value="{Binding PlaybackHighlightFadeInPerSecond}" Default="8.0" Minimum="0.1" Maximum="20"
-                          TickFrequency="0.1" IsSnapToTickEnabled="True" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.notehighlight.fadeout}" Margin="0,10,0,0"
-                          Value="{Binding PlaybackHighlightFadeOutPerSecond}" Default="6.2" Minimum="0.1" Maximum="20"
-                          TickFrequency="0.1" IsSnapToTickEnabled="True" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.notebounce.height}" Margin="0,10,0,0"
-                          Value="{Binding PlaybackNoteBounceHeight}" Default="12.0" Minimum="1" Maximum="40"
-                          TickFrequency="1" IsSnapToTickEnabled="True" Format="{}{0:#0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.notebounce.duration}" Margin="0,10,0,0"
-                          Value="{Binding PlaybackNoteBounceDuration}" Default="0.25" Minimum="0.05" Maximum="2"
-                          TickFrequency="0.05" IsSnapToTickEnabled="True" Format="{}{0:#0.00}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.verticalfollow.margin}" Margin="0,10,0,0"
-                          Value="{Binding PlaybackVerticalFollowMargin}" Default="1.5" Minimum="0" Maximum="10"
-                          TickFrequency="0.5" IsSnapToTickEnabled="True" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.playback.verticalfollow.damping}" Margin="0,10,0,0"
-                          Value="{Binding PlaybackVerticalFollowDamping}" Default="3" Minimum="1" Maximum="20"
-                          TickFrequency="0.5" IsSnapToTickEnabled="True" Format="{}{0:#0.0}"/>
-          <TextBlock Text="{DynamicResource prefs.playback.metronome}" Margin="0,10,0,0"/>
-          <Grid ColumnDefinitions="Auto,8,30,8,*" Margin="0,10,0,0">
-            <TextBlock Grid.Column="0" Text="{DynamicResource prefs.playback.metronome.volume}"/>
+          <Grid ColumnDefinitions="Auto,8,20,8,*" Margin="0,10,0,0">
+            <TextBlock Grid.Column="0" Text="{DynamicResource prefs.playback.cursorposition}"/>
             <TextBlock Grid.Column="2">
               <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:#0}">
-                  <Binding Path="MetronomeVolume"/>
+                <MultiBinding StringFormat="{}{0:#0.0}">
+                  <Binding Path="PlayPosMarkerMargin"/>
                 </MultiBinding>
               </TextBlock.Text>
             </TextBlock>
-            <Slider Grid.Column="4" Classes="fader" Value="{Binding MetronomeVolume}" Minimum="0" Maximum="100" Tag="MetronomeVolume"
-                    PointerPressed="OnMetronomeSliderPointerPressed"
-                    TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="true"/>
+            <Slider Grid.Column="4" Classes="fader" Value="{Binding PlayPosMarkerMargin}" Minimum="0" Maximum="1"
+                    TickPlacement="BottomRight" TickFrequency="0.1" IsSnapToTickEnabled="true"/>
           </Grid>
-          <Grid ColumnDefinitions="Auto,8,40,8,*" Margin="0,10,0,0">
-            <TextBlock Grid.Column="0" Text="{DynamicResource prefs.playback.metronome.highfrequency}"/>
-            <TextBlock Grid.Column="2">
-              <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:#0}">
-                  <Binding Path="MetronomeHighFrequency"/>
-                </MultiBinding>
-              </TextBlock.Text>
-            </TextBlock>
-            <Slider Grid.Column="4" Classes="fader" Value="{Binding MetronomeHighFrequency}" Minimum="20" Maximum="5000" Tag="MetronomeHighFrequency"
-                    PointerPressed="OnMetronomeSliderPointerPressed"
-                    TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="true"/>
-          </Grid>
-          <Grid ColumnDefinitions="Auto,8,40,8,*" Margin="0,10,0,0">
-            <TextBlock Grid.Column="0" Text="{DynamicResource prefs.playback.metronome.lowfrequency}"/>
-            <TextBlock Grid.Column="2">
-              <TextBlock.Text>
-                <MultiBinding StringFormat="{}{0:#0}">
-                  <Binding Path="MetronomeLowFrequency"/>
-                </MultiBinding>
-              </TextBlock.Text>
-            </TextBlock>
-            <Slider Grid.Column="4" Classes="fader" Value="{Binding MetronomeLowFrequency}" Minimum="20" Maximum="3000" Tag="MetronomeLowFrequency"
-                    PointerPressed="OnMetronomeSliderPointerPressed"
-                    TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="true"/>
-          </Grid>
-          <Button Content="{DynamicResource prefs.playback.test}" HorizontalAlignment="Stretch" Command="{Binding TestMetronome}"/>
         </StackPanel>
 
         <!-- Paths -->
@@ -206,15 +148,6 @@
                     HorizontalAlignment="Stretch" Click="SelectAddlSingersPath"/>
             <Button Grid.Column="4" Content="{DynamicResource singers.refresh}"
                     HorizontalAlignment="Stretch" Click="ReloadSingers"/>
-          </Grid>
-          <TextBlock Text="{DynamicResource prefs.paths.addlresampler}" Margin="0,10,0,0"/>
-          <Grid ColumnDefinitions="*,10,Auto" Margin="4,0,0,0" HorizontalAlignment="Stretch">
-            <TextBlock TextWrapping="Wrap" FontSize="11" Text="{Binding AdditionalResamplersPath}"/>
-            <Button Content="{DynamicResource button.open}" Grid.Column="2" Click="OpenAddlResamplersFolder"/>
-          </Grid>
-          <Grid HorizontalAlignment="Stretch" ColumnDefinitions="*,10,*">
-            <Button Grid.Column="0" Content="{DynamicResource button.reset}" HorizontalAlignment="Stretch" Click="ResetAddlResamplersPath"/>
-            <Button Grid.Column="2" Content="{DynamicResource button.select}" HorizontalAlignment="Stretch" Click="SelectAddlResamplersPath"/>
           </Grid>
           <Grid Margin="0,5,0,0">
             <TextBlock Text="{DynamicResource prefs.paths.addlsinger.install}" HorizontalAlignment="Left"/>
@@ -242,9 +175,18 @@
             <TextBlock Text="{DynamicResource prefs.rendering.prerender}" HorizontalAlignment="Left"/>
             <ToggleSwitch IsChecked="{Binding PreRender}"/>
           </Grid>
-          <c:NumberSlider Label="{DynamicResource prefs.rendering.threads.numthreads}" Margin="0,10,0,0"
-                          Value="{Binding NumRenderThreads}" Default="2" Minimum="1" Maximum="{Binding LogicalCoreCount, Mode=OneTime}"
-                          TickFrequency="1" IsSnapToTickEnabled="True" Format="{}{0:#0}"/>
+          <Grid ColumnDefinitions="Auto,8,16,8,*">
+            <TextBlock Grid.Column="0" Text="{DynamicResource prefs.rendering.threads.numthreads}"/>
+            <TextBlock Grid.Column="2">
+              <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0:#0}">
+                  <Binding Path="NumRenderThreads"/>
+                </MultiBinding>
+              </TextBlock.Text>
+            </TextBlock>
+            <Slider Grid.Column="4" Classes="fader" Value="{Binding NumRenderThreads}" Minimum="1" Maximum="{Binding LogicalCoreCount, Mode=OneTime}"
+                    TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="true"/>
+          </Grid>
           <TextBlock TextWrapping="Wrap" Text="{DynamicResource prefs.rendering.threads.cpuwarn}" FontWeight="Bold"
                       Foreground="Red" Margin="0,0,0,4" IsVisible="{Binding HighThreads}" FontSize="11"/>
           <TextBlock Classes="restart"/>
@@ -270,9 +212,9 @@
         <!-- Appearance -->
         <StackPanel>
           <TextBlock Text="{DynamicResource prefs.appearance.theme}" Margin="0,10,0,0"/>
-          <Grid HorizontalAlignment="Stretch" ColumnDefinitions="*,auto,auto,auto,auto">
+          <Grid HorizontalAlignment="Stretch" ColumnDefinitions="*,auto,auto,auto">
             <ComboBox Grid.Column="0" IsEnabled="{Binding !IsThemeEditorOpen}" ItemsSource="{Binding ThemeItems}" SelectedItem="{Binding ThemeName}"/>
-            <Button Grid.Column="1" IsEnabled="{Binding !IsThemeEditorOpen}" IsVisible="{Binding ThemeEditable}" MinWidth="18" MinHeight="18"
+            <Button Grid.Column="1" IsEnabled="{Binding !IsThemeEditorOpen}" IsVisible="{Binding ThemeEditable}" MinWidth="18" MinHeight="18" 
                 Click="OpenCustomThemeEditor" Margin="5,0,0,0" Padding="0" ToolTip.Tip="{DynamicResource prefs.appearance.customtheme.edit.title}">
                 <Grid Width="18" Height="18">
                   <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
@@ -300,55 +242,7 @@
                     Data="M8.43 3.33 a0.38 0.38 0 0 0 -0.38 0.38 v4.35 H3.7 a0.38 0.38 0 0 0 -0.38 0.38 v1.13 c0 0.23 0.19 0.38 0.38 0.38 h4.35 v4.35 c0 0.23 0.19 0.38 0.38 0.38 h1.13 a0.38 0.38 0 0 0 0.38 -0.38 V9.97 h4.35 a0.38 0.38 0 0 0 0.38 -0.38 v-1.13 a0.38 0.38 0 0 0 -0.38 -0.38 H9.97 V3.7 a0.38 0.38 0 0 0 -0.38 -0.38 h-1.13 z" />
               </Grid>
             </Button>
-            <Button Grid.Column="4" IsEnabled="{Binding !IsThemeEditorOpen}" Click="OnCustomThemeImport" MinWidth="18" MinHeight="18"
-                Margin="5,0,0,0" Padding="0" ToolTip.Tip="Import theme from file">
-              <Grid Width="18" Height="18">
-                  <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
-                    Classes="filled" Data="M5,20H19V18H5V19M19,9H15V3H9V9H5L12,16L19,9Z" >
-                    <Path.RenderTransform>
-                      <TransformGroup>
-                        <ScaleTransform ScaleX=".7" ScaleY=".7" />
-                        <TranslateTransform X="-2.7" Y="-2.7"/>
-                      </TransformGroup>
-                    </Path.RenderTransform>
-                  </Path>
-              </Grid>
-            </Button>
           </Grid>
-          <TextBlock Text="{DynamicResource prefs.appearance.customfont}" Margin="0,10,0,0"/>
-          <Grid ColumnDefinitions="*,Auto,Auto" Margin="0,2,0,0">
-            <TextBlock Grid.Column="0" Text="{Binding UiFontPath}" TextWrapping="Wrap" VerticalAlignment="Center"
-                       Margin="4,0,6,0" IsVisible="{Binding UiFontPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
-            <TextBlock Grid.Column="0" Text="{DynamicResource prefs.appearance.customfont.none}" VerticalAlignment="Center"
-                       Margin="4,0,6,0" IsVisible="{Binding UiFontPath, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
-            <Button Grid.Column="1" Content="{DynamicResource button.select}" Click="SelectUiFont" Margin="0,0,5,0"/>
-            <Button Grid.Column="2" Content="{DynamicResource button.reset}" Click="ResetUiFont"/>
-          </Grid>
-          <TextBlock Text="{DynamicResource prefs.appearance.customfont.family}" Margin="0,4,0,0"/>
-          <ComboBox ItemsSource="{Binding UiFontFamilies}" SelectedItem="{Binding UiFontFamily}"
-                    Margin="0,2,0,0" MaxDropDownHeight="320"/>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.appearance.customfont.notes}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding UseUiFontForNotes}"/>
-          </Grid>
-          <c:NumberSlider Label="{DynamicResource prefs.appearance.buttonradius}" Margin="0,10,0,0"
-                          Value="{Binding ButtonCornerRadius}" Default="0" Minimum="0" Maximum="10"
-                          TickFrequency="1" IsSnapToTickEnabled="False" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.appearance.noteradius}" Margin="0,5,0,0"
-                          Value="{Binding NoteCornerRadius}" Default="2" Minimum="0" Maximum="10"
-                          TickFrequency="1" IsSnapToTickEnabled="False" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.appearance.noteopacity}" Margin="0,5,0,0"
-                          Value="{Binding NoteOpacity}" Default="100" Minimum="0" Maximum="100"
-                          TickFrequency="10" IsSnapToTickEnabled="False" Format="{}{0:#0}%"/>
-          <c:NumberSlider Label="{DynamicResource prefs.appearance.trackcolor.opacity}" Margin="0,5,0,0"
-                          Value="{Binding TrackColorOpacity}" Default="100" Minimum="0" Maximum="100"
-                          TickFrequency="10" IsSnapToTickEnabled="False" Format="{}{0:#0}%"/>
-          <c:NumberSlider Label="{DynamicResource prefs.appearance.notehighlight}" Margin="0,5,0,0"
-                          Value="{Binding NoteHighlightThickness}" Default="1" Minimum="0.5" Maximum="6"
-                          TickFrequency="0.5" IsSnapToTickEnabled="False" Format="{}{0:#0.0}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.appearance.uiradius}" Margin="0,5,0,0"
-                          Value="{Binding UiCornerRadius}" Default="0" Minimum="0" Maximum="10"
-                          TickFrequency="1" IsSnapToTickEnabled="False" Format="{}{0:#0.0}"/>
           <TextBlock Text="{DynamicResource prefs.appearance.degree}" Margin="0,10,0,0"/>
           <ComboBox SelectedIndex="{Binding DegreeStyle}">
             <ComboBoxItem Content="{DynamicResource prefs.appearance.degree.off}"/>
@@ -358,10 +252,6 @@
           <Grid Margin="0,5,0,0">
             <TextBlock Text="{DynamicResource prefs.appearance.trackcolor}" HorizontalAlignment="Left"/>
             <ToggleSwitch IsChecked="{Binding UseTrackColor}"/>
-          </Grid>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.appearance.trackcolor.pianoroll}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding UseTrackColorInPianoRoll}"/>
           </Grid>
           <Grid Margin="0,5,0,0">
             <TextBlock Text="{DynamicResource prefs.appearance.showportrait}" HorizontalAlignment="Left"/>
@@ -376,30 +266,9 @@
             <ToggleSwitch IsChecked="{Binding ShowGhostNotes}"/>
           </Grid>
           <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.appearance.notehoverglow}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding NoteHoverGlow}"/>
+            <TextBlock Text="{DynamicResource prefs.appearance.detachpianoroll}" HorizontalAlignment="Left"/>
+            <ToggleSwitch IsChecked="{Binding DetachPianoRoll}"/>
           </Grid>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.appearance.diffsingerbarstyle}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding DiffSingerBarStyle}"/>
-          </Grid>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.waveformphraseboundaries}" HorizontalAlignment="Left" />
-            <ToggleSwitch IsChecked="{Binding ShowWaveformPhraseBoundaries}" />
-          </Grid>
-          <Grid Margin="0,5,0,0" ToolTip.Tip="Dims the whole piano roll except the pitch curve while a pitch tool (Shift+1-5) is active">
-            <TextBlock Text="Pitch edit mode" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding PitchEditMode}"/>
-          </Grid>
-          <c:NumberSlider Label="Pitch edit dimming" Margin="0,5,0,0" ToolTip.Tip="Strength of the pitch edit mode dimming"
-                          Value="{Binding PitchEditDim}" Default="59" Minimum="0" Maximum="100"
-                          TickFrequency="10" IsSnapToTickEnabled="False" Format="{}{0:#0}%"/>
-          <Grid Margin="0,10,0,0">
-            <TextBlock Text="{DynamicResource prefs.appearance.singerthemes.enabled}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding UseCustomSingerTheme}"/>
-          </Grid>
-          <Button Content="{DynamicResource prefs.appearance.singerthemes.manage}" Margin="0,6,0,0" HorizontalAlignment="Left"
-                  IsEnabled="{Binding !IsSingerThemeEditorOpen}" Click="OpenSingerThemeEditor"/>
         </StackPanel>
 
         <!-- UTAU -->
@@ -430,23 +299,6 @@
             <Button Grid.Column="2" Content="{DynamicResource button.select}"
                     HorizontalAlignment="Stretch" Click="SelectSetParamPath"/>
           </Grid>
-          <Grid>
-            <TextBlock Text="{DynamicResource prefs.extendendingphonemes}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding ExtendEndingPhonemes}"/>
-          </Grid>
-          <TextBlock Text="{DynamicResource prefs.utau.crosspitchblend}" Margin="0,16,0,0" FontWeight="Bold"/>
-          <TextBlock Text="{DynamicResource prefs.utau.crosspitchblend.desc}" TextWrapping="Wrap" FontSize="11" Opacity="0.7"/>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.utau.crosspitchblend.enable}" HorizontalAlignment="Left"/>
-            <ToggleSwitch IsChecked="{Binding ExperimentalCrossPitchBlend}"/>
-          </Grid>
-          <TextBlock Text="{DynamicResource prefs.utau.crosspitchblend.mode}" Margin="0,5,0,0"
-                     IsEnabled="{Binding ExperimentalCrossPitchBlend}"/>
-          <ComboBox HorizontalAlignment="Stretch" SelectedIndex="{Binding CrossPitchBlendMode}"
-                    IsEnabled="{Binding ExperimentalCrossPitchBlend}">
-            <ComboBoxItem Content="{DynamicResource prefs.utau.crosspitchblend.mode.finalpitch}"/>
-            <ComboBoxItem Content="{DynamicResource prefs.utau.crosspitchblend.mode.notetone}"/>
-          </ComboBox>
         </StackPanel>
 
         <!-- DiffSinger -->
@@ -457,9 +309,18 @@
           <ComboBox HorizontalAlignment="Stretch"  ItemsSource="{Binding DiffSingerStepsVarianceOptions}" SelectedItem="{Binding DiffSingerStepsVariance}"/>
           <TextBlock Text="{DynamicResource prefs.rendering.diffsingerstepspitch}" Margin="0,10,0,0"/>
           <ComboBox HorizontalAlignment="Stretch"  ItemsSource="{Binding DiffSingerStepsPitchOptions}" SelectedItem="{Binding DiffSingerStepsPitch}"/>
-          <c:NumberSlider Label="{DynamicResource prefs.rendering.diffsingerdepth}" Margin="0,10,0,0"
-                          Value="{Binding DiffSingerDepth}" Default="100" Minimum="0" Maximum="100"
-                          TickFrequency="1" IsSnapToTickEnabled="True" Format="{}{0:#0}%"/>
+          <Grid ColumnDefinitions="Auto,8,40,8,*" Margin="0,10,0,0">
+              <TextBlock Grid.Column="0" Text="{DynamicResource prefs.rendering.diffsingerdepth}"/>
+              <TextBlock Grid.Column="2">
+                  <TextBlock.Text>
+                      <MultiBinding StringFormat="{}{0:#0}%">
+                          <Binding Path="DiffSingerDepth"/>
+                      </MultiBinding>
+                  </TextBlock.Text>
+              </TextBlock>
+              <Slider Grid.Column="4" Classes="fader" Value="{Binding DiffSingerDepth}" Minimum="0" Maximum="100"
+                      TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="true"/>
+          </Grid>
           <Grid Margin="0,5,0,0">
             <TextBlock Text="{DynamicResource prefs.cache.diffsingertensorcache}" HorizontalAlignment="Left" />
             <ToggleSwitch IsChecked="{Binding DiffSingerTensorCache}" />
@@ -476,18 +337,6 @@
             <TextBlock Text="{DynamicResource prefs.rendering.diffsingerpitchlocalretaking}" HorizontalAlignment="Left" />
             <ToggleSwitch IsChecked="{Binding DiffSingerLocalRetaking}" />
           </Grid>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.rendering.diffsingerautosp}" HorizontalAlignment="Left" VerticalAlignment="Center" />
-            <ToggleSwitch IsChecked="{Binding DiffSingerAutoSP}" />
-          </Grid>
-          <c:NumberSlider Label="{DynamicResource prefs.rendering.diffsingerautospms}" Margin="0,5,0,0"
-                          IsEnabled="{Binding DiffSingerAutoSP}"
-                          Value="{Binding DiffSingerAutoSPMs}" Default="40" Minimum="10" Maximum="200"
-                          TickFrequency="5" IsSnapToTickEnabled="True" Format="{}{0:#0}"/>
-          <Grid Margin="0,5,0,0">
-            <TextBlock Text="{DynamicResource prefs.diffsinger.renderphraseboundaries}" HorizontalAlignment="Left" />
-            <ToggleSwitch IsChecked="{Binding DiffSingerShowRenderPhraseBoundaries}" />
-          </Grid>
         </StackPanel>
 
         <!-- Advanced -->
@@ -501,6 +350,11 @@
             <CheckBox IsChecked="{Binding RememberVsqx}" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center"/>
             <TextBlock Text=" .vsqx" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center"/>
           </Grid>
+          <Grid IsVisible="{OnPlatform Default=false, Linux=True}" Margin="0,10,0,0">
+            <TextBlock Text="{DynamicResource prefs.advanced.wayland}" HorizontalAlignment="Left"/>
+            <ToggleSwitch IsChecked="{Binding Wayland}"/>
+          </Grid>
+          <TextBlock Classes="restart" IsVisible="{OnPlatform Default=false, Linux=True}"/>
           <TextBlock Text="{DynamicResource prefs.advanced.winepath}" 
                       IsVisible="{OnPlatform Windows=False, Default=True}" Margin="0,10,0,0"/>
           <TextBlock HorizontalAlignment="Stretch" Margin="4"
