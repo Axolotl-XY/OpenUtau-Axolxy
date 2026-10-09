@@ -16,8 +16,9 @@ namespace OpenUtau.Core.Render {
         public const string DIFFSINGER = "DIFFSINGER";
         public const string VOICEVOX = "VOICEVOX";
         public const string NEUTRINO = "NEUTRINO";
+        public const string CUSTOM_SERVER = "CUSTOM_SERVER";
 
-        static readonly string[] classicRenderers = new[] { WORLDLINE_R, CLASSIC };
+        static readonly string[] classicRenderers = new[] { WORLDLINE_R, CLASSIC, CUSTOM_SERVER };
         static readonly string[] enunuRenderers = new[] { ENUNU };
         static readonly string[] vogenRenderers = new[] { VOGEN };
         static readonly string[] diffSingerRenderers = new[] { DIFFSINGER };
@@ -46,6 +47,7 @@ namespace OpenUtau.Core.Render {
 
         public static List<string> getRendererOptions() {
             return new List<string> {
+                "Custom Server",
                 "WORLDLINE-R",
                 "Classic"
             };
@@ -76,6 +78,8 @@ namespace OpenUtau.Core.Render {
                 return new Voicevox.VoicevoxRenderer();
             } else if (renderer == NEUTRINO) {
                 return new Neutrino.NeutrinoRenderer();
+            } else if (renderer == CUSTOM_SERVER) {
+                return new CustomRender.CustomServerRenderer();
             }
             return null;
         }

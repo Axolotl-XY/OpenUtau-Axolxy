@@ -77,6 +77,12 @@ namespace OpenUtau.Core.Render {
 
         // voicevox & enunu args
         public readonly int toneShift;
+        // phoneme type (PHTP)
+        public readonly int phonemeType;
+        // stretch mode (STRT): 0=normal, 1=loop
+        public readonly int stretchMode;
+        // splice mode (SPLC): 0=default, 1=old splicing
+        public readonly int spliceMode;
 
         public UOto oto { get; private set; }
         public readonly UOto oto2;
@@ -143,6 +149,9 @@ namespace OpenUtau.Core.Render {
                     writer.Write(duration);
                     writer.Write(phoneme ?? string.Empty);
                     writer.Write(tone);
+                    writer.Write(phonemeType);
+                    writer.Write(stretchMode);
+                    writer.Write(spliceMode);
 
                     writer.Write(resampler ?? string.Empty);
                     foreach (var flag in flags) {
@@ -195,6 +204,11 @@ namespace OpenUtau.Core.Render {
         public readonly float[] toneShift;
         public readonly float[] tension;
         public readonly float[] voicing;
+        public readonly float[] lowcut;
+        public readonly float[] warmth;
+        public readonly float[] hcmp;
+        public readonly float[] breathLow;
+        public readonly float[] breathHigh;
         public readonly float[] xsy;
         public readonly USubbank[] xpbBanks;
         public readonly int[] xpbLowerBank;
