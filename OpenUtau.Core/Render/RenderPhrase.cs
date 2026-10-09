@@ -594,7 +594,7 @@ namespace OpenUtau.Core.Render {
                         writer.Write(phone.hash);
                     }
                     if (postEffect) {
-                        foreach (var array in new float[][] { pitches, dynamics, gender, breathiness, toneShift, tension, voicing, xsy }) {
+                        foreach (var array in new float[][] { pitches, dynamics, gender, breathiness, toneShift, tension, voicing, xsy, lowcut, warmth, hcmp, breathLow, breathHigh }) {
                             if (array == null) {
                                 writer.Write("null");
                             } else {
