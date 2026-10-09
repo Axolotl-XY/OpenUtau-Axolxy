@@ -486,6 +486,13 @@ namespace OpenUtau.Core.Render {
                     case Format.Ustx.TENC: tension = curveSampled; break;
                     case Format.Ustx.BREC: breathiness = curveSampled; break;
                     case Format.Ustx.VOIC: voicing = curveSampled; break;
+                    case Format.Ustx.LOWC: lowcut = curveSampled; break;
+                    case Format.Ustx.WARM:
+                        if (!curve.IsEmpty) { warmth = curveSampled; }
+                        break;
+                    case Format.Ustx.HCMP: hcmp = curveSampled; break;
+                    case Format.Ustx.BREL: breathLow = curveSampled; break;
+                    case Format.Ustx.BREH: breathHigh = curveSampled; break;
                     case Format.Ustx.XSY:
                         xsy = curveSampled;
                         foreach (var phone in phones) {
