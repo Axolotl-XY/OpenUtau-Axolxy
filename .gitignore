@@ -344,3 +344,6 @@ tmp/
 
 # VS Code extensions autogen
 *.csproj.lscache
+
+# Script backup files
+*.bak*

@@ -1,4 +1,4 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -6,10 +6,15 @@
         x:Class="OpenUtau.App.Views.TrackSettingsDialog"
         Icon="/Assets/open-utau.ico"
         Title="{DynamicResource dialogs.tracksettings.caption}"
-        Height="184" Width="320" WindowStartupLocation="CenterOwner" CanResize="False">
+        Width="360" SizeToContent="Height" WindowStartupLocation="CenterOwner" CanResize="False">
   <Border Margin="{Binding $parent.WindowDecorationMargin}">
     <StackPanel Margin="8">
       <TextBlock Text="{DynamicResource warning.renderer}" IsVisible="{Binding IsNotClassic}"/>
+      <TextBlock Text="服务器地址" IsVisible="{Binding IsCustomServer}"/>
+      <TextBox Text="{Binding ServerUrl}" IsVisible="{Binding IsCustomServer}"/>
+      <TextBlock Text="Endpoint 路径" IsVisible="{Binding IsCustomServer}"/>
+      <TextBox Text="{Binding Endpoint}" IsVisible="{Binding IsCustomServer}"/>
+      <Button Content="保存为默认" HorizontalAlignment="Stretch" IsVisible="{Binding IsCustomServer}" Command="{Binding SetDefaultServerUrl}"/>
       <TextBlock Text="{DynamicResource prefs.rendering.resampler}" IsVisible="{Binding NeedsResampler}"/>
       <ComboBox Grid.Column="0" HorizontalAlignment="Stretch" IsVisible="{Binding NeedsResampler}"
                 ItemsSource="{Binding Resamplers}"

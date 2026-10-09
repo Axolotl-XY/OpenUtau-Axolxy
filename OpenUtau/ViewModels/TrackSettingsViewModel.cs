@@ -20,6 +20,9 @@ namespace OpenUtau.App.ViewModels {
         [Reactive] public partial IWavtool? Wavtool { get; set; }
         [Reactive] public partial bool NeedsWavtool { get; set; }
         [Reactive] public partial bool IsNotClassic { get; set; }
+        [Reactive] public partial bool IsCustomServer { get; set; }
+        [Reactive] public partial string ServerUrl { get; set; } = "http://localhost:8000";
+        [Reactive] public partial string Endpoint { get; set; } = "/synthesize";
 
         ObservableCollectionExtended<IResampler> resamplers =
             new ObservableCollectionExtended<IResampler>();
@@ -49,7 +52,12 @@ namespace OpenUtau.App.ViewModels {
                 Wavtool = ToolsManager.Inst.GetWavtool(wavtoolName);
                 NeedsResampler = Renderers.CLASSIC == renderer;
                 NeedsWavtool = Renderers.CLASSIC == renderer;
-                IsNotClassic = Renderers.CLASSIC != renderer;
+                IsCustomServer = renderer == Renderers.CUSTOM_SERVER;
+                IsNotClassic = Renderers.CLASSIC != renderer && !IsCustomServer;
+                if (IsCustomServer) {
+                    ServerUrl = string.IsNullOrEmpty(Preferences.Default.DefaultServerUrl) ? "http://localhost:8000" : Preferences.Default.DefaultServerUrl;
+                    Endpoint = string.IsNullOrEmpty(Preferences.Default.DefaultEndpoint) ? "/synthesize" : Preferences.Default.DefaultEndpoint;
+                }
             }
             this.WhenAnyValue(x => x.Resampler)
                 .OfType<IResampler>()
@@ -80,6 +88,12 @@ namespace OpenUtau.App.ViewModels {
                 Preferences.Default.DefaultResamplers[Track.RendererSettings.renderer] = Resampler.ToString() ?? string.Empty;
                 Preferences.Save();
             }
+        }
+
+        public void SetDefaultServerUrl() {
+            Preferences.Default.DefaultServerUrl = ServerUrl;
+            Preferences.Default.DefaultEndpoint = Endpoint;
+            Preferences.Save();
         }
 
         public void OpenWavtoolLocation() {

@@ -20,8 +20,14 @@ using Serilog;
 
 namespace OpenUtau.Core.CustomRender {
     public class CustomServerRenderer : IRenderer {
-        public string ServerUrl { get; set; } = "http://localhost:8000";
-        public string Endpoint { get; set; } = "/synthesize";
+        public string ServerUrl {
+            get => string.IsNullOrEmpty(Preferences.Default.DefaultServerUrl) ? "http://localhost:8000" : Preferences.Default.DefaultServerUrl;
+            set => Preferences.Default.DefaultServerUrl = value;
+        }
+        public string Endpoint {
+            get => string.IsNullOrEmpty(Preferences.Default.DefaultEndpoint) ? "/synthesize" : Preferences.Default.DefaultEndpoint;
+            set => Preferences.Default.DefaultEndpoint = value;
+        }
         // HttpClient 设计为单例复用，避免为每个请求创建新的连接池
         private static readonly HttpClient sharedHttpClient = new HttpClient {
             Timeout = TimeSpan.FromMinutes(5)

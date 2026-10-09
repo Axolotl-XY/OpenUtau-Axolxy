@@ -43,9 +43,9 @@
 
   <Style Selector="ListBoxItem.toolbar">
     <Setter Property="BorderThickness" Value="0"/>
-    <Setter Property="MinHeight" Value="20"/>
-    <Setter Property="Height" Value="20"/>
-    <Setter Property="Width" Value="20"/>
+    <Setter Property="MinHeight" Value="32"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="Width" Value="32"/>
     <Setter Property="Padding" Value="1"/>
     <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}" />
     <Setter Property="ContextFlyout" Value="{Binding $self.(FlyoutBase.AttachedFlyout)}" />
@@ -90,7 +90,7 @@
                 BorderBrush="{TemplateBinding BorderBrush}"
                 BorderThickness="{TemplateBinding BorderThickness}"
                 CornerRadius="{DynamicResource ButtonCornerRadius}">
-          <Grid Width="18" Height="18" HorizontalAlignment="Center" VerticalAlignment="Center">
+          <Grid Width="18" Height="18" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="50%,50%"><Grid.RenderTransform><ScaleTransform ScaleX="1.15" ScaleY="1.15"/></Grid.RenderTransform>
             <Path Name="PART_ToolIcon" Classes="filled">
               <Path.RenderTransform>
                 <TransformGroup>
