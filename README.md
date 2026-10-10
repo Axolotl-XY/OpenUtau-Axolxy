@@ -11,9 +11,7 @@ OpenUtau is a free, open-source editor made for the UTAU community.
 
 ## Getting started
 
-[![Download](https://img.shields.io/static/v1?style=for-the-badge&logo=github&label=download&message=windows-x64-directml&labelColor=FF347C&color=4ea6ea)](https://github.com/emeraldsingers/UtauV/releases/latest/download/OpenUtau-win-x64.zip)</br>
-[![Download](https://img.shields.io/static/v1?style=for-the-badge&logo=github&label=download&message=windows-x64-cuda&labelColor=FF347C&color=4ea6ea)](https://github.com/emeraldsingers/UtauV/releases/latest/download/OpenUtau-win-x64-cuda.zip)</br>
-[![Download](https://img.shields.io/static/v1?style=for-the-badge&logo=github&label=download&message=linux-x64&labelColor=FF347C&color=4ea6ea)](https://github.com/emeraldsingers/UtauV/releases/latest/download/OpenUtau-linux-x64.zip)
+[![Download](https://img.shields.io/static/v1?style=for-the-badge&logo=github&label=download&message=windows-x64-directml&labelColor=FF347C&color=4ea6ea)](https://v4.gh-proxy.org/https://github.com/Axolotl-XY/OpenUtau-Axolxy/releases/download/v0.1.0/OpenUtauAxolxy-win-x64.7z)</br>
 
 It is **strongly recommended** that you read these Github wiki pages before using the software.
 - [Getting-Started](https://github.com/openutau/OpenUtau/wiki/Getting-Started)
