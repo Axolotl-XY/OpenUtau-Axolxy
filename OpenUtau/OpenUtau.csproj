@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
     <TargetFramework>net10.0-windows</TargetFramework>
   </PropertyGroup>
@@ -18,9 +18,9 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <CFBundleName>UtauV</CFBundleName>
-    <CFBundleDisplayName>UtauV</CFBundleDisplayName>
-    <CFBundleIdentifier>asoqwer.UtauV</CFBundleIdentifier>
+    <CFBundleName>OpenUTAU-Axolxy</CFBundleName>
+    <CFBundleDisplayName>OpenUTAU-Axolxy</CFBundleDisplayName>
+    <CFBundleIdentifier>asoqwer.OpenUTAU-Axolxy</CFBundleIdentifier>
     <CFBundleVersion>0.0.0</CFBundleVersion>
     <CFBundleShortVersionString>0.0.0</CFBundleShortVersionString>
     <CFBundlePackageType>APPL</CFBundlePackageType>

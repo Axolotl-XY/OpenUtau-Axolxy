@@ -1,4 +1,4 @@
-<!--DO NOT modify this file. It is managed autometically.-->
+﻿<!--DO NOT modify this file. It is managed autometically.-->
 <!--To contribute to OpenUtau's localization, visit https://crowdin.com/project/oxygen-dioxideopenutau -->
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
@@ -211,6 +211,20 @@
   <system:String x:Key="menu.file">文件</system:String>
   <system:String x:Key="menu.file.exit">退出</system:String>
   <system:String x:Key="menu.file.exportaudio">导出音频</system:String>
+  <system:String x:Key="menu.file.exportvideo">导出视频</system:String>
+  <system:String x:Key="dialogs.videoexport.caption">导出视频</system:String>
+  <system:String x:Key="dialogs.videoexport.fps">帧率</system:String>
+  <system:String x:Key="dialogs.videoexport.audio">导出音频（与视频合并）</system:String>
+  <system:String x:Key="dialogs.videoexport.output">输出文件</system:String>
+  <system:String x:Key="dialogs.videoexport.browse">浏览...</system:String>
+  <system:String x:Key="dialogs.videoexport.start">开始</system:String>
+  <system:String x:Key="dialogs.videoexport.hint">导出期间按空格可终止。</system:String>
+  <system:String x:Key="dialogs.videoexport.done">已导出：{0}</system:String>
+  <system:String x:Key="dialogs.videoexport.cancelled">已取消</system:String>
+  <system:String x:Key="dialogs.videoexport.failed">导出视频失败</system:String>
+  <system:String x:Key="dialogs.videoexport.nopiano">请先打开钢琴卷帘窗口</system:String>
+  <system:String x:Key="dialogs.videoexport.noffmpeg">找不到 ffmpeg.exe，请将它加入 PATH</system:String>
+  <system:String x:Key="dialogs.videoexport.progress">导出中：{0}/{1}</system:String>
   <system:String x:Key="menu.file.exportds">导出DiffSinger脚本至</system:String>
   <system:String x:Key="menu.file.exportmidi">导出Midi文件</system:String>
   <system:String x:Key="menu.file.exportmixdown">混缩为Wav文件</system:String>

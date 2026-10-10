@@ -1,8 +1,8 @@
-[Desktop Entry]
+﻿[Desktop Entry]
 
 Type=Application
-Name=UtauV
+Name=OpenUTAU-Axolxy
 Comment=Singing voice synthesizer
 Exec=UtauV
-Icon=UtauV
+Icon=OpenUTAU-Axolxy
 Categories=AudioVideo;Audio;Midi

@@ -1,4 +1,4 @@
-<ResourceDictionary xmlns="https://github.com/avaloniaui"
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   
@@ -327,6 +327,20 @@ Do you want to continue by splitting at the nearest position after current playh
   <system:String x:Key="menu.file">File</system:String>
   <system:String x:Key="menu.file.exit">Exit</system:String>
   <system:String x:Key="menu.file.exportaudio">Export Audio</system:String>
+  <system:String x:Key="menu.file.exportvideo">Export Video</system:String>
+  <system:String x:Key="dialogs.videoexport.caption">Export Video</system:String>
+  <system:String x:Key="dialogs.videoexport.fps">Frame Rate</system:String>
+  <system:String x:Key="dialogs.videoexport.audio">Export audio (merged with video)</system:String>
+  <system:String x:Key="dialogs.videoexport.output">Output File</system:String>
+  <system:String x:Key="dialogs.videoexport.browse">Browse...</system:String>
+  <system:String x:Key="dialogs.videoexport.start">Start</system:String>
+  <system:String x:Key="dialogs.videoexport.hint">Press Space during export to cancel.</system:String>
+  <system:String x:Key="dialogs.videoexport.done">Exported: {0}</system:String>
+  <system:String x:Key="dialogs.videoexport.cancelled">Cancelled</system:String>
+  <system:String x:Key="dialogs.videoexport.failed">Export failed</system:String>
+  <system:String x:Key="dialogs.videoexport.nopiano">Please open the piano roll window first.</system:String>
+  <system:String x:Key="dialogs.videoexport.noffmpeg">ffmpeg.exe not found. Please add it to PATH.</system:String>
+  <system:String x:Key="dialogs.videoexport.progress">Exporting: {0}/{1}</system:String>
   <system:String x:Key="menu.file.exportds">Export DiffSinger Scripts To</system:String>
   <system:String x:Key="menu.file.exportmidi">Export Midi File</system:String>
   <system:String x:Key="menu.file.exportmixdown">Mixdown To Wav File</system:String>
