@@ -1,4 +1,4 @@
-<Application xmlns="https://github.com/avaloniaui"
+﻿<Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:OpenUtau.App"
              x:Class="OpenUtau.App.App" Name="UtauV">
@@ -37,6 +37,8 @@
       <ResourceInclude x:Key="themes-teal" Source="/Colors/TealTheme.axaml"/>
       <ResourceInclude x:Key="themes-light-breeze" Source="/Colors/LightBreezeTheme.axaml"/>
       <ResourceInclude x:Key="themes-graphite" Source="/Colors/GraphiteTheme.axaml"/>
+      <ResourceInclude x:Key="themes-rose" Source="/Colors/RoseTheme.axaml"/>
+      <ResourceInclude x:Key="themes-rosedarker" Source="/Colors/RoseDarkerTheme.axaml"/>
       <ResourceInclude x:Key="themes-ice" Source="/Colors/IceTheme.axaml"/>
       <ResourceInclude x:Key="themes-silver" Source="/Colors/SilverTheme.axaml"/>
       <ResourceInclude x:Key="themes-custom" Source="/Colors/CustomTheme.axaml"/>

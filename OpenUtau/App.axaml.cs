@@ -113,6 +113,8 @@ namespace OpenUtau.App {
             var teal = (IResourceDictionary) Current.Resources["themes-teal"]!;
             var lightBreeze = (IResourceDictionary) Current.Resources["themes-light-breeze"]!;
             var graphite = (IResourceDictionary) Current.Resources["themes-graphite"]!;
+            var rose = (IResourceDictionary) Current.Resources["themes-rose"]!;
+            var roseDarker = (IResourceDictionary) Current.Resources["themes-rosedarker"]!;
             var ice = (IResourceDictionary) Current.Resources["themes-ice"]!;
             var silver = (IResourceDictionary) Current.Resources["themes-silver"]!;
             var custom = (IResourceDictionary) Current.Resources["themes-custom"]!;
@@ -143,6 +145,14 @@ namespace OpenUtau.App {
                     break;
                 case "Graphite":
                     ApplyTheme(graphite);
+                    Current.RequestedThemeVariant = ThemeVariant.Dark;
+                    break;
+                case "Rose":
+                    ApplyTheme(rose);
+                    Current.RequestedThemeVariant = ThemeVariant.Dark;
+                    break;
+                case "RoseDarker":
+                    ApplyTheme(roseDarker);
                     Current.RequestedThemeVariant = ThemeVariant.Dark;
                     break;
                 case "Ice":
