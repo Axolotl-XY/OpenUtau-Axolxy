@@ -26,7 +26,12 @@ namespace OpenUtau.App.ViewModels {
             }
         }
         public bool HasRangeSelection => DocManager.Inst.rangeEndTick > DocManager.Inst.rangeStartTick;
-        public bool IsPlaying => PlaybackManager.Inst.PlayingMaster;
+        public bool IsPlaying => PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI;
+
+        public void RefreshForVideoExport() {
+            this.RaisePropertyChanged(nameof(IsPlaying));
+            this.RaisePropertyChanged(nameof(ShowPlayPosHighlight));
+        }
         public bool ShowPlayPosHighlight => !IsPlaying || HasRangeSelection;
         public bool LoopPlayback {
             get => PlaybackManager.Inst.LoopPlayback;

@@ -124,11 +124,12 @@ namespace OpenUtau.App.Views {
 
             DocManager.Inst.AddSubscriber(this);
 
-            Log.Information("Main window checking Update.");
-            UpdaterDialog.CheckForUpdate(
-                dialog => dialog.Show(this),
-                () => (Application.Current?.ApplicationLifetime as IControlledApplicationLifetime)?.Shutdown(),
-                TaskScheduler.FromCurrentSynchronizationContext());
+            /* 自动检查更新已禁用（换源后再启用） */
+            // Log.Information("Main window checking Update.");
+            // UpdaterDialog.CheckForUpdate(
+            //     dialog => dialog.Show(this),
+            //     () => (Application.Current?.ApplicationLifetime as IControlledApplicationLifetime)?.Shutdown(),
+            //     TaskScheduler.FromCurrentSynchronizationContext());
             Log.Information("Created main window.");
             this.Cursor = null;
         }
@@ -492,6 +493,68 @@ namespace OpenUtau.App.Views {
             }
         }
 
+        void OnVideoExportKeyDown(object? sender, Avalonia.Input.KeyEventArgs args) {
+            if (videoExportCts == null) {
+                return;
+            }
+            if (args.Key == Avalonia.Input.Key.Space) {
+                videoExportCts.Cancel();
+                args.Handled = true;
+            }
+        }
+
+        System.Threading.CancellationTokenSource? videoExportCts;
+
+        async void OnMenuExportVideo(object sender, RoutedEventArgs args) {
+            var project = DocManager.Inst.Project;
+            if (!await WarnToSave(project)) {
+                return;
+            }
+            if (pianoRoll == null) {
+                await MessageBox.Show(this, "请先打开钢琴卷帘窗口", "导出视频", MessageBox.MessageBoxButtons.Ok);
+                return;
+            }
+            var ffmpeg = OpenUtau.App.Video.VideoExporter.FindFfmpeg();
+            if (ffmpeg == null) {
+                await MessageBox.Show(this, "找不到 ffmpeg.exe，请将它加入 PATH", "导出视频", MessageBox.MessageBoxButtons.Ok);
+                return;
+            }
+
+            var name = System.IO.Path.GetFileNameWithoutExtension(project.FilePath);
+            var dir = System.IO.Path.GetDirectoryName(project.FilePath)!;
+            var outDir = System.IO.Path.Combine(dir, "Export");
+            System.IO.Directory.CreateDirectory(outDir);
+            var defaultPath = System.IO.Path.Combine(outDir, $"{name}.mp4");
+
+            var dlg = new Views.VideoExportDialog(defaultPath);
+            bool? ok = await dlg.ShowDialog<bool>(this);
+            if (ok != true) {
+                return;
+            }
+
+            videoExportCts = new System.Threading.CancellationTokenSource();
+            try {
+                await OpenUtau.App.Video.VideoExporter.ExportAsync(
+                    pianoRoll, project, dlg.Fps, dlg.ExportAudio, dlg.OutputPath, ffmpeg,
+                    (stage, cur, total) => {
+                        double pct = total > 0 ? (double)cur / total * 100 : 0;
+                        DocManager.Inst.ExecuteCmd(new ProgressBarNotification(pct, $"导出视频: {cur}/{total}"));
+                    },
+                    videoExportCts.Token);
+                DocManager.Inst.ExecuteCmd(new ProgressBarNotification(0, ""));
+                await MessageBox.Show(this, $"已导出: {dlg.OutputPath}", "导出视频", MessageBox.MessageBoxButtons.Ok);
+            } catch (System.OperationCanceledException) {
+                DocManager.Inst.ExecuteCmd(new ProgressBarNotification(0, ""));
+                await MessageBox.Show(this, "已取消", "导出视频", MessageBox.MessageBoxButtons.Ok);
+            } catch (System.Exception e) {
+                DocManager.Inst.ExecuteCmd(new ProgressBarNotification(0, ""));
+                Serilog.Log.Error(e, "Video export failed");
+                await MessageBox.Show(this, e.Message, "导出视频失败", MessageBox.MessageBoxButtons.Ok);
+            } finally {
+                videoExportCts?.Dispose();
+                videoExportCts = null;
+            }
+        }
         async void OnMenuExportWavTo(object sender, RoutedEventArgs args) {
             var project = DocManager.Inst.Project;
             var file = await FilePicker.SaveFileAboutProject(

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
@@ -338,7 +338,7 @@ namespace OpenUtau.App.Controls {
         }
 
         void UpdateHoverGlow() {
-            var now = DateTime.UtcNow;
+            var now = OpenUtau.App.Video.VideoClock.Now;
             float dt = (float)Math.Clamp((now - hoverLastFrame).TotalSeconds, 0, 0.1);
             hoverLastFrame = now;
             float step = dt / (float)HoverGlowDuration;
@@ -777,12 +777,18 @@ namespace OpenUtau.App.Controls {
         private bool renderPassActive;
         private bool invalidatePending;
 
+        public void AdvanceAnimationForExport() {
+            // 不在这里推进状态。让 Render() 内部自己去调 UpdatePlaybackHighlight，
+            // 避免同一帧被推进两次。
+            InvalidateVisual();
+        }
+
         private void UpdatePlaybackHighlight(bool seek) {
-            var now = DateTime.UtcNow;
+            var now = OpenUtau.App.Video.VideoClock.Now;
             float dt = (float)Math.Clamp((now - highlightLastFrame).TotalSeconds, 0, 0.1);
             highlightLastFrame = now;
             bool anyEffect = ShowPlaybackNoteHighlight || ShowPlaybackNoteBounce || ShowPlaybackNoteOrbit;
-            var target = (!anyEffect || !PlaybackManager.Inst.PlayingMaster)
+            var target = (!anyEffect || !(PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI))
                 ? null
                 : seek || activePlaybackNote == null ? FindPlaybackNote() : activePlaybackNote;
             bool changed = false;
@@ -818,13 +824,13 @@ namespace OpenUtau.App.Controls {
                 activeBounceElapsed += dt;
                 changed = true;
             }
-            if (ShowPlaybackNoteOrbit && PlaybackManager.Inst.PlayingMaster) {
+            if (ShowPlaybackNoteOrbit && (PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI)) {
                 playbackOrbitElapsed += dt * GetPlaybackOrbitTempoScale();
                 changed = true;
             }
-            bool orbiting = ShowPlaybackNoteOrbit && PlaybackManager.Inst.PlayingMaster;
+            bool orbiting = ShowPlaybackNoteOrbit && (PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI);
             bool needed = activeHighlight > 0.001f || fadingHighlight > 0.001f || bouncing || orbiting;
-            if (needed || (anyEffect && PlaybackManager.Inst.PlayingMaster)) {
+            if (needed || (anyEffect && (PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI))) {
                 if (!highlightTimer.IsEnabled) {
                     highlightTimer.Start();
                 }
@@ -847,7 +853,7 @@ namespace OpenUtau.App.Controls {
         }
 
         private Vector GetPlaybackAnimationOffset(UNote note) {
-            if (!PlaybackManager.Inst.PlayingMaster ||
+            if (!(PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI) ||
                 (!ShowPlaybackNoteOrbit && (!ShowPlaybackNoteBounce || note != activePlaybackNote))) {
                 return default;
             }
@@ -887,7 +893,7 @@ namespace OpenUtau.App.Controls {
         }
 
         private Matrix GetPlaybackRotation(UNote note, Point center) {
-            if (!ShowPlaybackNoteOrbit || !PlaybackManager.Inst.PlayingMaster) {
+            if (!ShowPlaybackNoteOrbit || !(PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI)) {
                 return Matrix.Identity;
             }
             return RofloficEffects.OrbitRotation(note.position, playbackOrbitElapsed, center, true);

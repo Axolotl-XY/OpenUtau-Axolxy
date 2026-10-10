@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,6 +11,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.VisualTree;
 using Avalonia.Threading;
 using OpenUtau.App.ViewModels;
 using OpenUtau.App.Views;
@@ -79,7 +80,7 @@ namespace OpenUtau.App.Controls {
 
         private void UpdatePortraitSpin() {
             var notes = ViewModel?.NotesViewModel;
-            bool active = notes?.ShowPlaybackPortraitSpin == true && PlaybackManager.Inst.PlayingMaster;
+            bool active = notes?.ShowPlaybackPortraitSpin == true && (PlaybackManager.Inst.PlayingMaster || PlaybackManager.Inst.ForcePlayingUI);
             if (active) {
                 var note = ViewModel?.PlaybackViewModel == null
                     ? null
@@ -91,6 +92,15 @@ namespace OpenUtau.App.Controls {
             }
             if (PortraitImage.RenderTransform is RotateTransform rotate) {
                 rotate.Angle = active ? portraitSpinAngle : 0;
+            }
+        }
+
+        public void AdvanceAnimationForExport() {
+            var canvas = this.GetVisualDescendants().OfType<NotesCanvas>().FirstOrDefault();
+            if (canvas == null) {
+                Serilog.Log.Warning("VideoExport: NotesCanvas NOT FOUND in visual tree");
+            } else {
+                canvas.AdvanceAnimationForExport();
             }
         }
 

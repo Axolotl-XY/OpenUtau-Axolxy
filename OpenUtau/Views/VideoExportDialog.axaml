@@ -1,0 +1,31 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="OpenUtau.App.Views.VideoExportDialog"
+        Title="导出视频"
+        Width="480" SizeToContent="Height" CanResize="False"
+        WindowStartupLocation="CenterOwner">
+  <StackPanel Margin="16" Spacing="10">
+    <Grid ColumnDefinitions="100,*">
+      <TextBlock Grid.Column="0" Text="帧率:" VerticalAlignment="Center"/>
+      <ComboBox Grid.Column="1" x:Name="FpsCombo" HorizontalAlignment="Stretch" SelectedIndex="1">
+        <ComboBoxItem Content="24 fps"/>
+        <ComboBoxItem Content="30 fps"/>
+        <ComboBoxItem Content="60 fps"/>
+      </ComboBox>
+    </Grid>
+    <CheckBox x:Name="AudioCheck" Content="导出音频（与视频合并）" IsChecked="True"/>
+    <Grid ColumnDefinitions="100,*,Auto">
+      <TextBlock Grid.Column="0" Text="输出文件:" VerticalAlignment="Center"/>
+      <TextBox Grid.Column="1" x:Name="PathBox" VerticalAlignment="Center"/>
+      <Button Grid.Column="2" Content="浏览..." Margin="6,0,0,0" Click="OnBrowse"/>
+    </Grid>
+    <TextBlock Text="提示：导出期间按空格可终止。" FontSize="11" Opacity="0.7" Margin="0,4,0,0"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,8,0,0">
+      <Button Content="取消" MinWidth="80" Click="OnCancel"/>
+      <Button Content="开始" MinWidth="80" Click="OnOk"/>
+    </StackPanel>
+  </StackPanel>
+</Window>

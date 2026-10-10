@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -285,6 +285,8 @@ namespace OpenUtau.Core {
         public bool OutputActive => AudioOutput.PlaybackState == PlaybackState.Playing;
         public bool StartingToPlay { get; private set; }
         public bool PlayingMaster { get; private set; }
+        /// <summary>Set by VideoExporter so the UI believes it is playing.</summary>
+        public bool ForcePlayingUI { get; set; }
         public bool LoopPlayback { get; set; }
         public bool Metronome {
             get => metronomeEngine.Enabled;

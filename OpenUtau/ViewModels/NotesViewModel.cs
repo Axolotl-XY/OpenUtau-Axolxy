@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,6 +58,10 @@ namespace OpenUtau.App.ViewModels {
         [Reactive] public partial double PlayPosHighlightWidth { get; set; }
         [Reactive] public partial bool PlayPosWaitingRendering { get; set; }
         [Reactive] public partial int PlayPosTick { get; set; }
+
+        public void RefreshPlayPosForVideoExport() {
+            this.RaisePropertyChanged(nameof(PlayPosTick));
+        }
         [Reactive] public partial bool ShowTips { get; set; }
         [Reactive] public partial bool PlayTone { get; set; }
         [Reactive] public partial bool ShowVibrato { get; set; }
