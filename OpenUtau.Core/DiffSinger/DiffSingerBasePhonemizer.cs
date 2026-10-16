@@ -380,6 +380,7 @@ namespace OpenUtau.Core.DiffSinger
             return token;
         }
         
+
         protected virtual string[] PostProcessWordSymbols(Note[][] phrase, int wordIndex, string[] symbols) { return symbols; }
 
         /// <summary>
@@ -497,10 +498,12 @@ namespace OpenUtau.Core.DiffSinger
                 .Reshape(new int[] { 1, ph_midi.Length })));
             //Group-aware duration models also need word_div/word_dur: pass them
             //along when the graph declares them, so older models are unaffected.
-            if (durationModel.InputMetadata.ContainsKey("word_div")) {
+            bool feedWordInputs = durationModel.InputMetadata.ContainsKey("word_div")
+                && durationModel.InputMetadata.ContainsKey("word_dur");
+            if (feedWordInputs) {
                 durationInputs.Add(NamedOnnxValue.CreateFromTensor("word_div", wordDivTensor));
+                durationInputs.Add(NamedOnnxValue.CreateFromTensor("word_dur", wordDurTensor));
             }
-            if (durationModel.InputMetadata.ContainsKey("word_dur")) {
                 durationInputs.Add(NamedOnnxValue.CreateFromTensor("word_dur", wordDurTensor));
             }
             //Speaker
