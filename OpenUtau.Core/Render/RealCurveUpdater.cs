@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenUtau.Core.Ustx;
@@ -160,7 +160,7 @@ namespace OpenUtau.Core.Render {
             UProject project,
             UVoicePart part,
             IReadOnlyList<RealCurveUpdate> updates,
-            IReadOnlySet<ulong> phraseHashes) {
+            IReadOnlyCollection<ulong> phraseHashes) {
             bool changed = false;
             foreach (var update in updates) {
                 if (!update.IsValid || !phraseHashes.Contains(update.phraseHash)) {

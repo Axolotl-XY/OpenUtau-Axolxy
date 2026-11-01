@@ -500,10 +500,8 @@ namespace OpenUtau.Core.DiffSinger
             //along when the graph declares them, so older models are unaffected.
             bool feedWordInputs = durationModel.InputMetadata.ContainsKey("word_div")
                 && durationModel.InputMetadata.ContainsKey("word_dur");
-            if (feedWordInputs) {
+                        if (feedWordInputs) {
                 durationInputs.Add(NamedOnnxValue.CreateFromTensor("word_div", wordDivTensor));
-                durationInputs.Add(NamedOnnxValue.CreateFromTensor("word_dur", wordDurTensor));
-            }
                 durationInputs.Add(NamedOnnxValue.CreateFromTensor("word_dur", wordDurTensor));
             }
             //Speaker
