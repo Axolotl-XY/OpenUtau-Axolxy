@@ -347,3 +347,6 @@ tmp/
 
 # Script backup files
 *.bak*
+
+*.7z
+*.zip
